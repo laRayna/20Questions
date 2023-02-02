@@ -6,12 +6,12 @@ import java.util.*;
 import java.io.*;
 
 public class QuestionsGame {
-	public TreeNode overallRoot;
+	public QuestionNode overallRoot;
 	public int size;
 	
 	public QuestionsGame(String str)
 	{
-		overallRoot = new TreeNode(str);
+		overallRoot = new QuestionNode(str);
 		size = 1;
 	}
 	
@@ -21,12 +21,10 @@ public class QuestionsGame {
 		while(input.hasNextLine())
 		{
 			String str = input.nextLine();
-			if(str.length() > 2)
-			{
-				list.add(str);
-				System.out.print("added");
-			}
+			
+			list.add(str);
 		}
+		
 		add(overallRoot, list);
 	}
 	
@@ -46,12 +44,16 @@ public class QuestionsGame {
 	
 	public void play()
 	{
-		TreeNode pointer = overallRoot;
+		System.out.println("hi");
+		
+		QuestionNode pointer = overallRoot;
 		Scanner scn = new Scanner(System.in);
+		
 		while(pointer.left != null && pointer.right != null)
 		{
 			System.out.println(pointer.data);
 			String temp = scn.nextLine();
+			
 			if(temp.trim().toLowerCase().startsWith("y"))
 			{
 				pointer = pointer.left;
@@ -104,8 +106,24 @@ public class QuestionsGame {
 	
 	
     private static class QuestionNode {
-        // Your code here
-		TreeNode root = new TreeNode("Does it do stuff");
+        public String data;            //data stored at this node
+        public QuestionNode  left;    //reference to left subtree
+        public QuestionNode right;   //reference to right subtree
+
+        // Constructs a leaf node with the given data
+        public QuestionNode(String data)
+        {
+            this(data, null, null);
+        }
+
+        // Constructs a branch node with the given data and links
+        public QuestionNode(String data, QuestionNode left, QuestionNode right)
+        {
+            this.data = data;
+            this.left = left;
+            this.right = right;
+        }
+        
     }
     
     
@@ -114,19 +132,35 @@ public class QuestionsGame {
     
     
     
-    
-    private void add(TreeNode pointer, ArrayList<String> list)
+    private void add(QuestionNode pointer, ArrayList<String> list)
     {
-    	if (overallRoot == null)
-    		overallRoot = new TreeNode(list.get(0));
-    
+    	String qa = list.get(0);
+    	list.remove(qa);
+    	String info = list.get(0);
+    	list.remove(info);
     	
+    	if(qa.equals("Q") == true)
+    	{
+    		pointer = new QuestionNode(info);
+        	
+    		add(pointer.left, list);
+    		add(pointer.right, list);
+    		
+    	
+    	}	
+    	else
+    	{
+    		pointer = new QuestionNode(info);    
+    	}
+//    	
+//    	overallRoot = pointer;
+//    	System.out.print(overallRoot.data);
+
     }
-    
     
     
 	
-	 private ArrayList<String> getQuestions(ArrayList<String> str, TreeNode pointer) {
+	 private ArrayList<String> getQuestions(ArrayList<String> str, QuestionNode pointer) {
 		 if(pointer == null)
 			 return str;
 		 str.add(pointer.data);
